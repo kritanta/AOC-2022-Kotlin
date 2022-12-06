@@ -1,7 +1,9 @@
+import java.util.zip.DataFormatException
+
 enum class Hand {
     Rock, Paper, Scissors
 }
-enum class CodedHand(val hand: Hand, val score: Int) {
+enum class CodedHand(val hand: Hand, val handScore: Int) {
     A(Hand.Rock, 1),
     B(Hand.Paper, 2),
     C(Hand.Scissors, 3),
@@ -29,14 +31,14 @@ fun main() {
             var me = CodedHand.valueOf(s[2].toString());
 
             var pointsForMatch = 0
-            if(opponent.score - me.score == -1 || (opponent.hand == Hand.Scissors && me.hand == Hand.Rock)){
+            if(opponent.handScore - me.handScore == -1 || (opponent.hand == Hand.Scissors && me.hand == Hand.Rock)){
                 pointsForMatch = 6
             }
-            else if(opponent.score == me.score){
+            else if(opponent.handScore == me.handScore){
                 pointsForMatch = 3;
             }
 
-            sum += pointsForMatch + me.score;
+            sum += pointsForMatch + me.handScore;
         }
 
         return sum;
@@ -55,17 +57,26 @@ fun main() {
             var opponent = CodedHand2.valueOf(s[0].toString());
             var me = CodedHand2.valueOf(s[2].toString());
 
-            var pointsForItem = 0
-            if(me == CodedHand2.X){
-                pointsForItem = opponent.score -1;
-            }
-            else if(me == CodedHand2.Z){
-                pointsForItem = opponent.score +1;
-            }
-            else if(me == CodedHand2.Y){
-                pointsForItem = opponent.score;
+            var pointsForItem: Int
+            pointsForItem = when (me) {
+                CodedHand2.X -> {
+                    opponent.score -1;
+                }
+
+                CodedHand2.Z -> {
+                    opponent.score +1;
+                }
+
+                CodedHand2.Y -> {
+                    opponent.score;
+                }
+
+                else -> {
+                    throw DataFormatException("Unexpected data")
+                }
             }
 
+            //fix rollover cases
             if(pointsForItem == 0){
                 pointsForItem = 3;
             }
