@@ -5,14 +5,6 @@ enum class Command {
     ls, cd
 }
 
-enum class FileType {
-    File, Dir
-}
-
-enum class Files(val type: FileType, val size: Int) {
-    File(FileType.File, 1),
-}
-
 data class FileTree(val parent:FileTree?, val name: String, var size:Int = 0, val children:MutableList<FileTree> = mutableListOf())
 
 
@@ -120,7 +112,7 @@ fun main() {
         val sizeNeeded = sizeOfUpdate - (totalSize - fileTree[0].size)
 
         val dir = GetBigEnoughDirectories(fileTree, sizeNeeded);
-        return dir.name
+        return "${dir.name} - ${dir.size}"
 
     }
 
@@ -137,7 +129,7 @@ fun main() {
 
 
         val dir = mapDirs(fileTree[0]).filter { it.children.isNotEmpty() && it.size >= sizeNeeded }.sortedBy { it.size }.first()
-        return dir.name
+        return "${dir.name} - ${dir.size}"
 
     }
 
